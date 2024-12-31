@@ -21,10 +21,11 @@
         h1 {
             font-size: 3rem;
             text-align: center;
+            margin-top: 20px;
         }
         h2 {
             font-size: 2rem;
-            margin-top: 20px;
+            margin: 10px 0;
         }
         .confetti {
             position: absolute;
@@ -34,34 +35,71 @@
             opacity: 0.7;
         }
         #countdown {
-            margin-top: 20px;
+            margin: 20px 0;
             font-size: 2rem;
             font-weight: bold;
             text-align: center;
         }
+        .decorations {
+            position: absolute;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            top: 0;
+            width: 100%;
+            pointer-events: none;
+        }
+        .decorations img {
+            width: 80px;
+            margin: 10px;
+            animation: float 3s ease-in-out infinite alternate;
+        }
+        @keyframes float {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-10px); }
+        }
+        .tree {
+            position: absolute;
+            bottom: 10px;
+            width: 150px;
+        }
     </style>
 </head>
 <body>
-    <h1>🎉 Happy New Year, [Family Name]! 🎉</h1>
+    <h1>🎉 Happy New Year, Family! 🎉</h1>
     <h2>Countdown to the New Year:</h2>
     <div id="countdown"></div>
+    <div class="decorations">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Christmas_hat.png" alt="Red Hat">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/1/15/Tangerine_fruit.jpg" alt="Mandarin">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Christmas_hat.png" alt="Red Hat">
+    </div>
+    <img class="tree" src="https://upload.wikimedia.org/wikipedia/commons/4/4f/Christmas_tree_ornament.png" alt="Christmas Tree">
 
     <script>
+        let countdownInterval;
         function updateCountdown() {
             const now = new Date();
             const nextYear = new Date(now.getFullYear() + 1, 0, 1);
             const diff = nextYear - now;
+
+            if (diff <= 0) {
+                clearInterval(countdownInterval);
+                for (let i = 0; i < 10; i++) {
+                    setTimeout(burstConfetti, i * 500);
+                }
+                document.getElementById('countdown').innerText = "Happy New Year! 🎆";
+                return;
+            }
 
             const days = Math.floor(diff / (1000 * 60 * 60 * 24));
             const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
-            document.getElementById('countdown').innerText = 
+            document.getElementById('countdown').innerText =
                 `${days} Days ${hours} Hours ${minutes} Minutes ${seconds} Seconds`;
         }
-
-        setInterval(updateCountdown, 1000);
 
         function createConfetti() {
             const confetti = document.createElement('div');
@@ -113,6 +151,8 @@
 
         burstConfetti();
         setInterval(createConfetti, 50);
+
+        countdownInterval = setInterval(updateCountdown, 1000);
     </script>
 </body>
 </html>
